@@ -1,7 +1,7 @@
 <!--
  * @Author: wangChao
  * @Date: 2021-06-05 11:50:25
- * @LastEditTime: 2021-06-15 23:18:39
+ * @LastEditTime: 2021-06-17 14:40:06
  * @LastEditors: wangChao
  * @Description: pdf列表
  * @FilePath: /guTengBao/src/views/list/index.vue
@@ -11,13 +11,11 @@
   <div class="_list">
     <div class="_left_pdf">
       <div class="detaileds" v-for="(item, index) in indexList" :key="index">
-        <img :src="item.cover" alt="" @click="$router.push({name: 'details', query: {id: item.pid}})">
-        <!-- <img src="https://gtb.zppinc.com/imgs/king.png" alt="" @click="$router.push({name: 'details', query: {id: index}})"> -->
+        <div class="img_wap"><img :src="item.cover" alt="" @click="$router.push({name: 'details', query: {id: item.pid}})"></div>
         <h6>{{ item.title }}</h6>
         <div>
           <a-button type="primary" @click="down(item.pid, 'ppt', item.title)">下载PPT</a-button>
           <a-button type="primary" @click="down(item.pid, 'pdf', item.title)">下载PDF</a-button>
-          <!-- <a :href="'https://gtb.zppinc.com/gtb/storage/app/public/project/8695162376664996.pdf'" target="_blank" ><a-button type="primary">下载PDF</a-button></a> -->
         </div>
       </div>
     </div>
@@ -30,8 +28,7 @@
 
 <script>
 import { mapMutations } from 'vuex'
-// eslint-disable-next-line no-unused-vars
-import { typelist, index, add, edit, info, like, download, addTag, deleteTag } from '@/api/index'
+import { typelist, index, download } from '@/api/index'
 export default {
   name: 'List',
   data () {
@@ -152,10 +149,18 @@ export default {
       width: calc((100% - 90px) /3);
       border: 1px solid #707070;
       border-radius: 10px;
-      img {
+      .img_wap {
+        padding-bottom: 56.25%;
         width: 100%;
-        height: 255px;
-        background-color: #707070;
+        position: relative;
+        img {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          background-color: #707070;
+        }
       }
       h6 {
         text-align: center;

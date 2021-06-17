@@ -1,7 +1,7 @@
 <!--
  * @Author: wangChao
  * @Date: 2021-06-05 10:56:35
- * @LastEditTime: 2021-06-17 11:27:25
+ * @LastEditTime: 2021-06-17 14:41:43
  * @LastEditors: wangChao
  * @Description: 公共头部
  * @FilePath: /guTengBao/src/components/GlobalHeader/index.vue
@@ -19,14 +19,10 @@
           <img :src="$store.getters.userInfos.headimg" alt="">
           <a-menu slot="overlay" class="user-dropdown-menu-wrapper">
             <a-menu-item key="1"><a-icon type="setting"/><span @click="$refs.basic.edit()">个人设置</span></a-menu-item>
-            <!-- <a-menu-item key="2"><a-icon type="setting"/><span>头像设置</span></a-menu-item>
-            <a-menu-item key="4"><a-icon type="setting"/><span>邮箱更改</span></a-menu-item> -->
-            <!-- <router-link :to="{ name: 'settings' }"></router-link> -->
             <a-menu-divider/>
             <a-menu-item key="3"><a href="javascript:;" @click="handleLogout"><a-icon type="logout"/><span>退出登录</span></a></a-menu-item>
           </a-menu>
         </a-dropdown>
-        <!-- <img :src="$store.getters.userInfos.headimg" alt=""> -->
       </div>
     </header>
     <org-modal ref="modal" @add="onAdd"></org-modal>
@@ -37,8 +33,6 @@
 <script>
 
 import { mapMutations, mapActions } from 'vuex'
-// eslint-disable-next-line no-unused-vars
-import { typelist, index, sadd, edit, info, like, download, addTag, deleteTag } from '@/api/index'
 import OrgModal from './modules/OrgModal'
 import SetBasic from './modules/SetBasic'
 import storage from 'store'

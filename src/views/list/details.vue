@@ -1,7 +1,7 @@
 <!--
  * @Author: wangChao
  * @Date: 2021-06-07 13:21:30
- * @LastEditTime: 2021-06-17 10:00:41
+ * @LastEditTime: 2021-06-17 14:38:43
  * @LastEditors: wangChao
  * @Description: 详情
  * @FilePath: /guTengBao/src/views/list/details.vue
@@ -19,7 +19,7 @@
       </div>
     </div>
     <div class="center-img">
-      <img :src="infoData.info.cover" alt="" srcset="">
+      <div class="img_wap"><img :src="infoData.info.cover" alt="" srcset=""></div>
     </div>
     <div class="uploadedOn">
       <div>
@@ -175,10 +175,18 @@ export default {
   padding: 20px;
   border: 1px solid #707070;
   border-radius: 10px;
-  img {
+  .img_wap {
+    padding-bottom: 56.25%;
     width: 100%;
-    height: 997px;
-    border-radius: 10px;
+    position: relative;
+    img {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 10px;
+    }
   }
 }
 .uploadedOn {
