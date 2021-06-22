@@ -1,7 +1,7 @@
 <!--
  * @Author: wangChao
  * @Date: 2021-06-07 13:21:30
- * @LastEditTime: 2021-06-17 14:38:43
+ * @LastEditTime: 2021-06-22 11:15:29
  * @LastEditors: wangChao
  * @Description: 详情
  * @FilePath: /guTengBao/src/views/list/details.vue
@@ -32,11 +32,11 @@
       </div>
     </div>
     <div class="bottom-label">
-      <span>剧集项目</span>
-      <span v-for="(item, index) in infoData.tags" :key="index">{{ item.tag }} <a-icon type="close" @click="onClose(item.tag)" v-if="infoData.do_auth"/></span>
-      <span v-if="infoData.do_auth">可输入新增标签 <a-icon type="plus" @click="$refs.modal.add()"/></span>
+      <span class="bottom-label-type">{{ infoData.info.typeTag }}</span>
+      <span v-for="(item, index) in infoData.tags" :key="index" @click="typeTagEdit(item)">{{ item.tag }} <a-icon type="close" @click.stop="onClose(item.tag)" v-if="infoData.do_auth"/></span>
+      <span v-if="infoData.do_auth" class="bottom-label-add">可输入新增标签 <a-icon type="plus" @click="$refs.modal.add()"/></span>
     </div>
-    <add-tags ref="modal" @add="onAdd"></add-tags>
+    <add-tags ref="modal" @add="onAdd" @edit="onEdit"></add-tags>
     <edit-project ref="project" @edit="onEditProject"></edit-project>
   </div>
 </template>
@@ -46,7 +46,7 @@ import addTags from './addTag'
 import storage from 'store'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import editProject from '@/components/GlobalHeader/modules/OrgModal'
-import { download, info, addTag, deleteTag, like } from '@/api/index'
+import { download, info, addTag, editTag, deleteTag, like } from '@/api/index'
 export default {
   name: 'Details',
   components: {
@@ -89,6 +89,18 @@ export default {
         this.$refs.modal.successSubmit()
         this.$refs.modal.handleCancel()
       })
+    },
+    onEdit (param) { // 修改tag
+      editTag(param).then(res => {
+        if (res.code !== 200) return this.$message.error(res.msg)
+        this.$message.success(res.msg)
+        this.getInfo()
+        this.$refs.modal.successSubmit()
+        this.$refs.modal.handleCancel()
+      })
+    },
+    typeTagEdit (item) {
+      if (this.infoData.do_auth) this.$refs.modal.edit(item)
     },
     down (pid, type, name) { // 下载
       download({ pid, type }).then(res => {
@@ -230,7 +242,7 @@ export default {
   padding: 0 80px;
   display: flex;
   flex-wrap: wrap;
-  span:nth-child(1){
+  .bottom-label-type {
     background-color: #5C646A;
   }
   span {
@@ -247,7 +259,7 @@ export default {
       margin-left: 10px;
     }
   }
-  span:last-child{
+  .bottom-label-add{
     background-color: #fff;
     color:  #A9A9A9;
   }

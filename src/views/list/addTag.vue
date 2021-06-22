@@ -53,8 +53,7 @@ export default {
       this.form.resetFields()
       this.visible = true
       this.text = '编辑'
-      this.creFrom = {
-      }
+      this.creFrom = item
       this.isEdit = true
     },
     add () {
@@ -67,15 +66,16 @@ export default {
     },
     handleSubmit () {
       const { form: { validateFields } } = this
-      this.confirmLoading = true
       validateFields((errors, values) => {
+        this.confirmLoading = true
         if (!errors) {
           var param = {
             tag: values.tag,
             pid: this.$route.query.id
           }
-          if (this.isEdit) param.id = this.creFrom.id
+          if (this.isEdit) param.otag = this.creFrom.tag
           setTimeout(() => {
+            this.confirmLoading = false
             this.$emit(this.isEdit ? 'edit' : 'add', param)
           }, 1500)
         } else {
