@@ -1,7 +1,7 @@
 <!--
  * @Author: wangChao
  * @Date: 2021-06-05 11:50:25
- * @LastEditTime: 2021-06-22 12:13:25
+ * @LastEditTime: 2021-06-22 13:55:32
  * @LastEditors: wangChao
  * @Description: pdf列表
  * @FilePath: /guTengBao/src/views/list/index.vue
@@ -32,7 +32,7 @@
       </div>
       <div class="_right_type">
         <p >分类筛选</p>
-        <div v-for="(item, index) in typelist" :key="index" :class="item.type === onSelect ? '_select' : ''" @click="onSelects(item)">{{ item.title }}</div>
+        <div v-for="(item, index) in $store.getters.typelist" :key="index" :class="item.type === onSelect ? '_select' : ''" @click="onSelects(item)">{{ item.title }}</div>
       </div>
     </div>
   </div>
@@ -87,13 +87,13 @@ export default {
   methods: {
     ...mapMutations(['SET_TYPE_LIST']),
     getType () { // 获取数据
-        // console.log(storage.get('Access-Token'))
       typelist({}).then(res => {
         // console.log(res)
         // if (res.code === 138) {
-        //   this.$message.error('请先去认证')
+          //   this.$message.error('请先去认证')
         // }
-        this.typelist = res.result.list
+        this.SET_TYPE_LIST(res.result.list)
+        // this.typelist = res.result.list
       })
     },
     getData () { // 获取数据

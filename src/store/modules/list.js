@@ -8,7 +8,7 @@
 const listData = {
   state: {
     search: '',
-    typelist: ''
+    typelist: []
   },
 
   mutations: {

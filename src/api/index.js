@@ -1,7 +1,7 @@
 /*
  * @Author: wangChao
  * @Date: 2021-06-09 16:42:16
- * @LastEditTime: 2021-06-22 11:04:51
+ * @LastEditTime: 2021-06-22 13:42:56
  * @LastEditors: wangChao
  * @Description: 主页
  * @FilePath: /guTengBao/src/api/index.js
@@ -18,6 +18,7 @@ const indexApi = {
   info: '/project/info', // 方案详情
   like: '/project/like', // 方案点赞/取消
   download: '/project/download', // 方案下载
+  projectDelete: '/project/delete', // 方案下载
   addTag: '/project/addTag', // 标签新增
   editTag: '/project/editTag', // 标签修改
   deleteTag: '/project/deleteTag' // 标签删除
@@ -37,6 +38,7 @@ const indexApi = {
  export function info (parameter) { return request({ url: indexApi.info, method: 'post', data: parameter }) }
  export function like (parameter) { return request({ url: indexApi.like, method: 'post', data: parameter }) }
  export function download (parameter) { return request({ url: indexApi.download, method: 'post', data: parameter }) }
+ export function projectDelete (parameter) { return request({ url: indexApi.projectDelete, method: 'post', data: parameter }) }
  export function addTag (parameter) { return request({ url: indexApi.addTag, method: 'post', data: parameter }) }
  export function editTag (parameter) { return request({ url: indexApi.editTag, method: 'post', data: parameter }) }
  export function deleteTag (parameter) { return request({ url: indexApi.deleteTag, method: 'post', data: parameter }) }
