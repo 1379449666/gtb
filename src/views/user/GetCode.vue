@@ -23,8 +23,8 @@ export default {
     }
   },
   created () {
-    this.login()
-    // this.testLogins()
+    // this.login()
+    this.testLogins()
   },
   methods: {
     ...mapActions(['Login', 'Logout']),
@@ -44,7 +44,7 @@ export default {
       })
     },
     testLogins () {
-      testLogin({ uid: 1 }).then(res => {
+      testLogin({ uid: 2 }).then(res => {
         if (res.code !== 200) return this.$message.error(res.msg)
         this.SET_TOKEN(res.result.session_id)
         this.SET_INFOS(res.result.user_info)

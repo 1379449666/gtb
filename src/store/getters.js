@@ -12,6 +12,7 @@ const getters = {
   userInfos: state => state.user.infos,
   addRouters: state => state.permission.addRouters,
   search: state => state.list.search,
+  userStat: state => state.list.userStat,
   typelist: state => state.list.typelist,
   multiTab: state => state.app.multiTab
 }

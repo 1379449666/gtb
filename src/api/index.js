@@ -19,9 +19,13 @@ const indexApi = {
   like: '/project/like', // 方案点赞/取消
   download: '/project/download', // 方案下载
   projectDelete: '/project/delete', // 方案下载
+  projectkKeywords: '/project/keywords', // 获取热搜列表
   addTag: '/project/addTag', // 标签新增
   editTag: '/project/editTag', // 标签修改
-  deleteTag: '/project/deleteTag' // 标签删除
+  deleteTag: '/project/deleteTag', // 标签删除
+  addStat: '/project/addStat', // 统计设置
+  commentList: '/comment/list', // 获取评论列表
+  commentAdd: '/comment/add' // 新增评论
 }
 
 /**
@@ -39,6 +43,10 @@ const indexApi = {
  export function like (parameter) { return request({ url: indexApi.like, method: 'post', data: parameter }) }
  export function download (parameter) { return request({ url: indexApi.download, method: 'post', data: parameter }) }
  export function projectDelete (parameter) { return request({ url: indexApi.projectDelete, method: 'post', data: parameter }) }
+ export function projectkKeywords (parameter) { return request({ url: indexApi.projectkKeywords, method: 'post', data: parameter }) }
  export function addTag (parameter) { return request({ url: indexApi.addTag, method: 'post', data: parameter }) }
  export function editTag (parameter) { return request({ url: indexApi.editTag, method: 'post', data: parameter }) }
  export function deleteTag (parameter) { return request({ url: indexApi.deleteTag, method: 'post', data: parameter }) }
+ export function addStat (parameter) { return request({ url: indexApi.addStat, method: 'post', data: parameter }) }
+ export function commentList (parameter) { return request({ url: indexApi.commentList, method: 'post', data: parameter }) }
+ export function commentAdd (parameter) { return request({ url: indexApi.commentAdd, method: 'post', data: parameter }) }

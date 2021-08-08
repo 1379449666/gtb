@@ -11,6 +11,7 @@ const userApi = {
   SendSmsErr: '/account/sms_err',
   // get my info
   UserInfo: '/api/user/info',
+  userStat: '/user/userStat',
   UserMenu: '/user/nav'
 }
 
@@ -36,6 +37,13 @@ export function login (parameter) {
 export function getSmsCaptcha (parameter) {
   return request({
     url: userApi.SendSms,
+    method: 'post',
+    data: parameter
+  })
+}
+export function userStat (parameter) {
+  return request({
+    url: userApi.userStat,
     method: 'post',
     data: parameter
   })

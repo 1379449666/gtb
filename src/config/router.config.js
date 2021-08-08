@@ -18,13 +18,13 @@ export const asyncRouterMap = [
       {
         path: '/home',
         name: 'home',
-        component: () => import('@/views/list'),
+        component: () => import('@/views/list/index1.vue'),
         meta: { title: '古腾堡', icon: 'profile', permission: ['profile'] }
       },
       {
         path: '/details',
         name: 'details',
-        component: () => import('@/views/list/details'),
+        component: () => import('@/views/list/details1.vue'),
         meta: { title: '古腾堡', icon: 'profile', permission: ['profile'] }
       }
       // dashboard

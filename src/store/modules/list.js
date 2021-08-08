@@ -8,7 +8,8 @@
 const listData = {
   state: {
     search: '',
-    typelist: []
+    typelist: [],
+    userStat: {}
   },
 
   mutations: {
@@ -21,10 +22,10 @@ const listData = {
     // },
     SET_TYPE_LIST: (state, typelist) => {
       state.typelist = typelist
+    },
+    SET_USER_STAT: (state, userStat) => {
+      state.userStat = userStat
     }
-    // SET_ROLES: (state, roles) => {
-    //   state.roles = roles
-    // },
     // SET_INFO: (state, info) => {
     //   state.info = info
     // },
