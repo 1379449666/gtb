@@ -155,6 +155,7 @@ export default {
 </script>
 
 <style lang="less" >
+
 .gtb_flex {
   display: flex;
 }
@@ -168,6 +169,9 @@ header {
   background-color: #fff;
   height: 120px;
   padding: 0 10.41%;
+  @media screen and (max-width: 1680px){
+    padding: 0 8%;
+  }
   display: flex !important;
   align-items: center;
   justify-content: space-between;
@@ -195,7 +199,8 @@ header {
     }
   }
   .gtb_label_type {
-    margin-right: 4.5%;
+    margin-right: 4%;
+    display: flex;
     span {
       display: inline-block;
       width: 80px;
@@ -219,6 +224,9 @@ header {
   .gtb_personal_data {
     margin-left: 10px;
     cursor: pointer;
+    >div:first-child {
+      width: 147px;
+    }
     img {
       width: 60px;
       height: 60px;
@@ -230,6 +238,9 @@ header {
       font-style:normal;
       font-size: 20px;
       color: #263650;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
     span {
       color: #858585;

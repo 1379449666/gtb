@@ -5,6 +5,7 @@
     :visible="visible"
     :maskClosable="false"
     :keyboard="false"
+    :destroy-on-close="true"
     :confirmLoading="confirmLoading"
     @ok="handleSubmit"
     @cancel="handleCancel"
@@ -267,6 +268,7 @@ export default {
     },
     handleCancel () {
       this.visible = false
+      this.creFrom = {}
     },
     handLoading () {
      this.confirmLoading = false

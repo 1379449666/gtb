@@ -58,7 +58,7 @@
         <div @click="onDelete" v-if="infoData.do_auth">删除文档</div>
         <div @click="$refs.project.edit(infoData.info)" v-if="infoData.do_auth">修改文档</div>
         <div @click="down($route.query.id, 'ppt', '1')" :class="infoData.info.ppt ? '' : 'disabled'">下载PPT</div>
-        <div @click="down($route.query.id, 'pdf', '1')" :class="infoData.info.ppt ? '' : 'disabled'">下载PDF</div>
+        <div @click="down($route.query.id, 'pdf', '1')" :class="infoData.info.pdf ? '' : 'disabled'">下载PDF</div>
       </div>
     </div>
     <div class="gtb_comment flex" :style="{ height:height + 'px' }">
@@ -231,9 +231,10 @@ watch: {
        var formData = new FormData()
       if (params.ppt) formData.append('ppt', params.ppt)
       if (params.pdf) formData.append('pdf', params.pdf)
-      formData.append('test', 1)
+      // formData.append('test', 1)
       formData.append('title', params.title)
       formData.append('type', params.type)
+      formData.append('tag', params.tag)
       formData.append('describe', params.describe)
       formData.append('session_id', storage.get(ACCESS_TOKEN))
       formData.append('pid', this.$route.query.id)

@@ -103,7 +103,7 @@ export default {
         offset: 15, // 每页多少条数据
         page: 1 // 当前页
       },
-      pageSizeOptions: ['15', '1', '45', '60', '75'],
+      pageSizeOptions: ['15', '45', '60', '75'],
       hotSearch: [1],
       indexList: [],
       type: [],
@@ -205,11 +205,14 @@ export default {
       })
     },
     onAdd (params) { // 新增方案
-      // console.log(params)
+      console.log(params)
+      // return false
+      // eslint-disable-next-line no-unreachable
       var formData = new FormData()
       if (params.ppt) formData.append('ppt', params.ppt)
       if (params.pdf) formData.append('pdf', params.pdf)
       formData.append('title', params.title)
+      formData.append('tag', params.tag)
       // formData.append('test', 1)
       formData.append('type', params.type)
       formData.append('describe', params.describe)
@@ -223,10 +226,10 @@ export default {
         this.$message.success(res.msg)
         this.$refs.modal.successSubmit()
         this.$refs.modal.handleCancel()
-        this.SET_SEARCH('-')
-        setTimeout(() => {
-        this.SET_SEARCH('')
-      }, 10)
+        this.operations()
+      //   setTimeout(() => {
+      //   this.SET_SEARCH('')
+      // }, 10)
       })
       // sadd(params).then(res => {
       //   console.log(res)
@@ -287,9 +290,9 @@ export default {
   >div:nth-child(3) {
     .ant-pagination {
       flex: 1 1 auto;
-      // /deep/ .ant-pagination-prev, .ant-pagination-next, .ant-pagination-jump-prev, .ant-pagination-jump-next {
-        // height: 36px;
-      // }
+      /deep/ .ant-pagination-prev, .ant-pagination-next, .ant-pagination-jump-prev, .ant-pagination-jump-next {
+        height: 36px;
+      }
       // display: flex;
       // align-items: center;
       /deep/ .ant-pagination-simple-pager input {
