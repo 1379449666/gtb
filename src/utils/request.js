@@ -56,7 +56,8 @@ request.interceptors.request.use(config => {
     // console.log(config.url)
     if (config.url === '/project/add' || config.url === '/project/edit' || config.url === '/user/uploadFileImg') {
   } else {
-    config.data = Qs.stringify({ session_id: token, ...config.data, test: 1 })
+    config.data = Qs.stringify({ session_id: token, ...config.data })
+    // config.data = Qs.stringify({ session_id: token, ...config.data, test: 1 })
   }
   return config
 }, errorHandler)

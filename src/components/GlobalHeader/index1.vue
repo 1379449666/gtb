@@ -10,8 +10,8 @@
 <template>
   <div>
     <header>
-      <div class="gtb_logo">
-        <img :src="$store.getters.userInfos.headimg" alt="" @click="$router.push({ path: 'home' })">
+      <div class="gtb_logo" @click="$router.push({ path: 'home' })">
+        <img src="/e/logo.png" alt="">
         <div>
           <span>古腾堡 - Beta 2</span>
           <span>AMS策划方案 - 模块化交付</span>
@@ -87,7 +87,7 @@ export default {
   this.getType()
  },
   methods: {
-    ...mapMutations(['SET_INFOS', 'SET_SEARCH']),
+    ...mapMutations(['SET_TYPE_LIST', 'SET_SEARCH']),
     editButtonIndex (index, item) {
       this.buttonIndex = index
       this.SET_SEARCH(item)
@@ -145,7 +145,7 @@ export default {
     },
     getType () { // 获取数据
       typelist({}).then(res => {
-        // this.SET_TYPE_LIST(res.result.list)
+        this.SET_TYPE_LIST(res.result.list)
         this.typelist = res.result.list
         this.SET_SEARCH(res.result.list[0])
       })
@@ -172,6 +172,7 @@ header {
   align-items: center;
   justify-content: space-between;
   .gtb_logo {
+    cursor: pointer;
     display: flex;
     align-items: center;
     margin-right: 4.01%;
@@ -179,7 +180,6 @@ header {
       width: 80px;
       height: 80px;
       margin-right: 15px;
-      cursor: pointer;
     }
     >div {
       display: flex;

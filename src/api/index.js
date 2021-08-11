@@ -25,7 +25,8 @@ const indexApi = {
   deleteTag: '/project/deleteTag', // 标签删除
   addStat: '/project/addStat', // 统计设置
   commentList: '/comment/list', // 获取评论列表
-  commentAdd: '/comment/add' // 新增评论
+  commentAdd: '/comment/add', // 新增评论
+  tagList: '/tag/list' // 标签列表
 }
 
 /**
@@ -50,3 +51,4 @@ const indexApi = {
  export function addStat (parameter) { return request({ url: indexApi.addStat, method: 'post', data: parameter }) }
  export function commentList (parameter) { return request({ url: indexApi.commentList, method: 'post', data: parameter }) }
  export function commentAdd (parameter) { return request({ url: indexApi.commentAdd, method: 'post', data: parameter }) }
+ export function tagList (parameter) { return request({ url: indexApi.tagList, method: 'post', data: parameter }) }

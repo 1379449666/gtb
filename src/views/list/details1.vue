@@ -61,8 +61,8 @@
         <div @click="down($route.query.id, 'pdf', '1')" :class="infoData.info.ppt ? '' : 'disabled'">下载PDF</div>
       </div>
     </div>
-    <div class="gtb_comment flex">
-      <div><img :src="infoData.info.cover" alt=""></div>
+    <div class="gtb_comment flex" :style="{ height:height + 'px' }">
+      <div><div ref="bgc"><img :src="infoData.info.cover" alt=""></div></div>
       <div>
         <div class="gtb_comment_list" id="data-list-content">
           <div class="gtb_comment_info" v-for="(item, index) in commentList" :key="index">
@@ -102,6 +102,7 @@ export default {
   data () {
     return {
       commentList: [],
+      height: 10,
       comment: '',
       processData: '',
       infoData: {
@@ -209,6 +210,7 @@ watch: {
       info({ pid: this.$route.query.id }).then(res => {
         if (res.code !== 200) return this.$message.error(res.msg)
         this.infoData = res.result
+        this.height = this.$refs.bgc.clientWidth / 16 * 9
       })
     },
     is_like () { // 点赞/取消
@@ -229,6 +231,7 @@ watch: {
        var formData = new FormData()
       if (params.ppt) formData.append('ppt', params.ppt)
       if (params.pdf) formData.append('pdf', params.pdf)
+      formData.append('test', 1)
       formData.append('title', params.title)
       formData.append('type', params.type)
       formData.append('describe', params.describe)
@@ -238,6 +241,7 @@ watch: {
         header: { 'content-type': 'multipart/form-data' }
       }
       this.$http.post('/project/edit', formData, config).then(res => {
+        this.$refs.project.handLoading()
         if (res.code !== 200) return this.$message.error(res.msg)
         this.$message.success(res.msg)
         this.getInfo()
@@ -354,22 +358,23 @@ i {
   }
   .gtb_comment {
     margin-top: 36px;
-    height: 511px;
     border-radius: 10px;
     overflow: hidden;
     align-items: flex-start;
     >div:first-child {
-      flex: 1;
-      // padding-bottom: 56.25%;
-      height: 100%;
-      position: relative;
+      // flex: 1;
+      width: calc(100% - 405px);
+      >div {
+        // padding-bottom: 56.25%;
+        height: 100%;
+        // position: relative;
+      }
       img {
         width: 100%;
         height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        border-radius: 10px;
+        // position: absolute;
+        // top: 0;
+        // left: 0;
       }
     }
     >div:last-child {

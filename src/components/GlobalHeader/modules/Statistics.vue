@@ -1,5 +1,5 @@
 <template>
-  <div class="gtb_statistics">
+  <div class="gtb_statistics" v-if="infoArray.length>0">
     <div v-for="(item, index) in statisticsData" :key="index">
       <img :src="item" alt="">
       <p>{{ infoArray[index] }}</p>
@@ -24,7 +24,7 @@ export default {
   },
   computed: {
    userStat () {
-      return this.$store.getters.userStat
+    return this.$store.getters.userStat
    }
   },
   watch: {
@@ -38,7 +38,6 @@ export default {
   methods: {
     setUserStat (info) {
       this.infoArray = [info.upload, info.download, info.like]
-      console.log(this.infoArray)
     }
   }
 }

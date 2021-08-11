@@ -23,8 +23,8 @@ export default {
     }
   },
   created () {
-    // this.login()
-    this.testLogins()
+    this.login()
+    // this.testLogins()
   },
   methods: {
     ...mapActions(['Login', 'Logout']),
@@ -63,7 +63,7 @@ export default {
       // 延迟 1 秒显示欢迎信息
       setTimeout(() => {
         this.$notification.success({
-          message: '欢迎',
+          message: `你好, ${this.$store.getters.userInfos.nickname}`,
           description: `${timeFix()}，欢迎回来`
         })
       }, 1000)

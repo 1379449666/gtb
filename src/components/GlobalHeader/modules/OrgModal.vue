@@ -12,12 +12,40 @@
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
         <a-form-item label="方案名称" :labelCol="labelCol" :wrapperCol="wrapperCol" >
-          <a-input placeholder="给方案起个名字" v-decorator="['title', {initialValue: creFrom.title, rules: [{required: true, message: '给方案起个名字！'}]}]"></a-input>
+          <a-input placeholder="20字以内，简单清晰地表述" v-decorator="['title', {initialValue: creFrom.title, rules: [{required: true, message: '20字以内，简单清晰地表述'}]}]"></a-input>
         </a-form-item>
-        <a-form-item label="方案分类" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <a-select placeholder="请选择分类类型" @change="selectHandleChange" v-decorator="[ 'type', {initialValue: creFrom.type, rules: [{required: true, message: '请选择分类！'}]}]">
+        <a-form-item label="方案分类" :labelCol="labelCol" :wrapperCol="wrapperCol" style="margin-bottom: 8px;">
+          <!-- <a-select placeholder="请选择分类类型" @change="selectHandleChange" v-decorator="[ 'type', {initialValue: creFrom.type, rules: [{required: true, message: '请选择分类！'}]}]">
             <a-select-option :value="item.type" v-for="(item,index) in $store.getters.typelist" :key="index" >{{ item.title }}</a-select-option>
-          </a-select>
+          </a-select> -->
+          <a-radio-group v-decorator="['type', {initialValue: creFrom.type, rules: [{required: true, message: '请选择方案类型！'}]}]">
+            <a-radio :value="item.type" v-for="item in radioList" :key="item.type">{{ item.title }}</a-radio>
+          </a-radio-group>
+        </a-form-item>
+        <a-form-item label="标签" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <a-tree
+            v-if="treeData.length>0"
+            v-model="creFrom.tag"
+            checkable
+            :auto-expand-parent="autoExpandParent"
+            :selected-keys="selectedKeys"
+            :tree-data="treeData"
+            defaultExpandAll
+            :replace-fields="replaceFields"
+            @expand="onExpand"
+            @select="onSelect"
+            @check="onCheck"
+          />
+          <!-- <a-tree
+            v-if="treeData.length>0"
+            v-model="checkedKeys"
+            checkable
+            @check="onCheck"
+            :selected-keys="selectedKeys"
+            :replace-fields="replaceFields"
+            defaultExpandAll
+            showLine
+            :tree-data="treeData"/> -->
         </a-form-item>
         <a-form-item label="讲述建议" :labelCol="labelCol" :wrapperCol="wrapperCol" >
           <a-input style="height:80px;" placeholder="请输入..." v-decorator="['describe', {initialValue: creFrom.describe, rules: [{required: true, message: '请输入SKU商品编号！'}]}]" type="textarea" />
@@ -30,7 +58,7 @@
             :show-upload-list="false"
             :before-upload="beforeUpload"
             @change="(i) => handleChange(i, 'ppt')"
-            v-decorator="['ppt', {initialValue: creFrom.ppt, rules: [{required: true, message: '请添加图片！'}]}]"
+            v-decorator="['ppt', {initialValue: creFrom.ppt}]"
           >
             <a-button > <a-icon type="upload" /> {{ creFrom.ppt ? creFrom.ppt.name : '上传文件' }} </a-button>
           </a-upload>
@@ -44,7 +72,7 @@
             :before-upload="beforeUpload"
             @change="(i) => handleChange(i, 'ppt')"
           >
-            <a-button > <a-icon type="upload" /> {{ creFrom.ppt ? creFrom.ppt.name : '上传文件' }} </a-button>
+            <a-button > <a-icon type="upload" /> {{ creFrom.ppt ? '已上传' : '上传文件' }} </a-button>
           </a-upload>
         </a-form-item>
         <a-form-item label="PDF上传" :labelCol="labelCol" :wrapperCol="wrapperCol" v-if="!isEdit">
@@ -55,7 +83,7 @@
             :show-upload-list="false"
             :before-upload="beforeUpload"
             @change="(i) => handleChange(i, 'pdf')"
-            v-decorator="['pdf', {initialValue: creFrom.pdf, rules: [{required: true, message: '请添加图片！'}]}]"
+            v-decorator="['pdf', {initialValue: creFrom.pdf}]"
           >
             <a-button > <a-icon type="upload" /> {{ creFrom.pdf ? creFrom.pdf.name : '上传文件' }} </a-button>
           </a-upload>
@@ -69,7 +97,7 @@
             :before-upload="beforeUpload"
             @change="(i) => handleChange(i, 'pdf')"
           >
-            <a-button > <a-icon type="upload" /> {{ creFrom.pdf ? creFrom.pdf.name : '上传文件' }} </a-button>
+            <a-button > <a-icon type="upload" /> {{ creFrom.pdf ? '已上传' : '上传文件' }} </a-button>
           </a-upload>
         </a-form-item>
       </a-form>
@@ -78,8 +106,11 @@
 </template>
 
 <script>
+import { Tree } from 'ant-design-vue'
+import { tagList } from '@/api/index'
 export default {
   components: {
+    'a-tree': Tree
   },
   props: {
     catigroyList: {
@@ -115,12 +146,54 @@ export default {
       },
       text: '',
       form: this.$form.createForm(this),
-      isEdit: false
+      isEdit: false,
+      treeData: [],
+      radioList: this.$store.getters.typelist,
+      expandedKeys: ['0-0-0'], // 展开指定的树节点
+      autoExpandParent: true, // 是否自动展开父节点
+      checkedKeys: [], // 默认选中的值
+      selectedKeys: [], // 设置选中的树节点(后面)
+      replaceFields: {
+        children: 'child',
+        title: 'tag',
+        key: 'id'
+      }
+    }
+  },
+   watch: {
+    checkedKeys (val) {
+      // console.log('onCheck', val)
     }
   },
   mounted () {
+    this.getTag()
   },
   methods: {
+    getTag () {
+      tagList().then(res => {
+        console.log(res)
+        this.treeData = res.result.list
+      })
+    },
+     onExpand (expandedKeys) { // 展开/收起节点时触发
+     return false
+      // eslint-disable-next-line no-unreachable
+      console.log('onExpand', expandedKeys)
+      // if not set autoExpandParent to false, if children expanded, parent can not collapse.
+      // or, you can remove all expanded children keys.
+      this.expandedKeys = expandedKeys
+      this.autoExpandParent = false
+    },
+    onCheck (checkedKeys) { // 点击复选框事件
+      console.log('onCheck', checkedKeys)
+      this.checkedKeys = checkedKeys
+    },
+    onSelect (selectedKeys, info) { // 点击树节点触发
+     return false
+      // eslint-disable-next-line no-unreachable
+      console.log('onSelect', info)
+      this.selectedKeys = selectedKeys
+    },
     edit (item) {
       this.form.resetFields()
       this.visible = true
@@ -141,13 +214,14 @@ export default {
       validateFields((errors, values) => {
         if (!errors) {
           var param = {
-            ppt: this.creFrom.ppt,
-            pdf: this.creFrom.pdf,
+            ppt: typeof this.creFrom.ppt === 'boolean' ? false : this.creFrom.ppt,
+            pdf: typeof this.creFrom.pdf === 'boolean' ? false : this.creFrom.pdf,
             title: values.title,
             type: values.type,
-            describe: values.describe
+            describe: values.describe,
+            tag: this.checkedKeys.join(',')
           }
-          // if (this.isEdit) param.id = this.creFrom.id
+          if (this.isEdit) param.id = this.creFrom.id
           setTimeout(() => {
             this.$emit(this.isEdit ? 'edit' : 'add', param)
           }, 1500)
@@ -193,7 +267,9 @@ export default {
     },
     handleCancel () {
       this.visible = false
-      this.confirmLoading = false
+    },
+    handLoading () {
+     this.confirmLoading = false
     }
   }
 }

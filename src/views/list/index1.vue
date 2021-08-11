@@ -13,13 +13,13 @@
       <div class="flex item-center">
         <div class="flex item-center gtb_search_input" >
           <span>{{ inputType.title }} |</span>
-          <a-input placeholder="输入关键词搜索方案" v-model="inputKeywords" allowClear/>
+          <a-input placeholder="输入关键词搜索" v-model="inputKeywords" allowClear/>
         </div>
         <div class="gtb_search" @click="getData">搜索</div>
       </div>
       <div >
         <span>最近常搜： </span>
-        <span class="gtb-hot-search" v-for="(item, index) in hotKey" :key="index" @click="inputKeywords = item.keywords">{{ item.keywords }}</span>
+        <span class="gtb-hot-search" v-for="(item, index) in hotKey" :key="index" @click="setHotKey(item.keywords)">{{ item.keywords }}</span>
       </div>
       <div class="flex">
         <a-pagination
@@ -28,10 +28,25 @@
           :default-current="paging.page"
           :default-page-size="paging.offset"
           :total="paging.total"
+          :show-less-items="true"
           @showSizeChange="onShowSizeChange"
           @change="onChange"
           :page-size-options="pageSizeOptions"
         />
+        <!-- <a-pagination
+          v-if="paging.total>0"
+          :default-current="paging.page"
+          :total="paging.total"
+          @change="onChange"
+          simple
+          :page-size-options="pageSizeOptions"
+        /> -->
+        <!-- <a-dropdown>
+          <a-menu slot="overlay" @click="handleMenuClick">
+            <a-menu-item v-for="item in pageSizeOptions" :key="item">{{ item }}条/页</a-menu-item>
+          </a-menu>
+          <a-button style="margin-left: 8px;height: initial;"> {{ paging.offset }}条/页 <a-icon type="down" /> </a-button>
+        </a-dropdown> -->
         <div class="upload" @click="$refs.modal.add()">上传</div>
       </div>
     </div>
@@ -48,7 +63,7 @@
               <span><img src="@/assets/look.png" alt="">{{ item.read }}</span>
               <span><img src="@/assets/comment.png" alt="">{{ item.comment }}</span>
               <span><img src="@/assets/grey-Download.png" alt="">{{ item.download }}</span>
-              <span><img src="@/assets/heart.png" alt="">{{ item.like }}</span>
+              <span><img src="@/assets/heart.png" alt="" @click="like(item.pid)">{{ item.like }}</span>
             </div>
           </div>
           <div class="gtb_list_info flex">
@@ -73,7 +88,7 @@ import { Pagination } from 'ant-design-vue'
 import storage from 'store'
 import OrgModal from '@/components/GlobalHeader/modules/OrgModal.vue'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
-import { typelist, index, download, projectkKeywords } from '@/api/index'
+import { typelist, index, download, projectkKeywords, like } from '@/api/index'
 import { userStat } from '@/api/login'
 export default {
   name: 'List',
@@ -122,6 +137,15 @@ export default {
   },
   methods: {
     ...mapMutations(['SET_TYPE_LIST', 'SET_USER_STAT']),
+    setHotKey (key) {
+      this.inputKeywords = key
+      this.operations()
+    },
+     handleMenuClick (e) {
+      this.paging.offset = Number(e.key)
+      this.paging.total = -1
+      this.getData()
+    },
     getType () { // 获取数据
       typelist({}).then(res => {
         // console.log(res)
@@ -134,9 +158,11 @@ export default {
     },
     getData () { // 获取数据
         // console.log(storage.get('Access-Token'))
+      if (!this.inputType.type) return false
       index({ page: this.paging.page, offset: this.paging.offset, type: this.inputType.type, keywords: this.inputKeywords }).then(res => {
         this.indexList = res.result.list
         this.paging = res.result.paging
+        console.log(this.paging)
       })
     },
     getHotKey () {
@@ -144,23 +170,14 @@ export default {
         this.hotKey = res.result.list
       })
     },
-    onSelects (item) {
-      console.log(this.onSelect)
-      if (item === this.onSelect) return false
-      this.onSelect = item.type
-      this.paging = {
-        total: 0, // 总条数
-        offset: 15, // 每页多少条数据
-        page: 1 // 当前页
-      }
-      this.getData()
-    },
     operations (item) {
+      if (!this.inputType.type) return false
       this.paging = {
         total: 0, // 总条数
         offset: 15, // 每页多少条数据
         page: 1 // 当前页
       }
+      console.log('--------')
       this.getData()
     },
     onShowSizeChange (current, pageSize) {
@@ -169,6 +186,7 @@ export default {
       this.getData()
     },
     onChange (current) {
+      console.log(current)
       this.paging.page = current
       this.getData()
     },
@@ -189,9 +207,10 @@ export default {
     onAdd (params) { // 新增方案
       // console.log(params)
       var formData = new FormData()
-      formData.append('ppt', params.ppt)
-      formData.append('pdf', params.pdf)
+      if (params.ppt) formData.append('ppt', params.ppt)
+      if (params.pdf) formData.append('pdf', params.pdf)
       formData.append('title', params.title)
+      // formData.append('test', 1)
       formData.append('type', params.type)
       formData.append('describe', params.describe)
       formData.append('session_id', storage.get(ACCESS_TOKEN))
@@ -199,6 +218,7 @@ export default {
         header: { 'content-type': 'multipart/form-data' }
       }
       this.$http.post('/project/add', formData, config).then(res => {
+        this.$refs.modal.handLoading()
         if (res.code !== 200) return this.$message.error(res.msg)
         this.$message.success(res.msg)
         this.$refs.modal.successSubmit()
@@ -215,6 +235,13 @@ export default {
     getUserStat () {
       userStat().then(res => {
         this.SET_USER_STAT(res.result.info)
+      })
+    },
+    like (pid) {
+      like({ pid }).then(res => {
+        if (res.code !== 200) return this.$message.error(res.msg)
+        this.getData()
+        this.getUserStat()
       })
     }
   }
@@ -260,9 +287,22 @@ export default {
   >div:nth-child(3) {
     .ant-pagination {
       flex: 1 1 auto;
-      /deep/ .ant-pagination-prev, .ant-pagination-next, .ant-pagination-jump-prev, .ant-pagination-jump-next {
-        height: 36px;
+      // /deep/ .ant-pagination-prev, .ant-pagination-next, .ant-pagination-jump-prev, .ant-pagination-jump-next {
+        // height: 36px;
+      // }
+      // display: flex;
+      // align-items: center;
+      /deep/ .ant-pagination-simple-pager input {
+        margin-right: 0;
+        padding: 0;
       }
+      /deep/ .ant-pagination-slash {
+        margin-right: 5px;
+      }
+      // ul {
+      //   display: flex;
+      //   align-items: center;
+      // }
     }
   }
   .gtb_search_input {
