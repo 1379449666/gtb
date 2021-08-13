@@ -26,7 +26,7 @@
         <a-form-item label="标签" :labelCol="labelCol" :wrapperCol="wrapperCol">
           <a-tree
             v-if="treeData.length>0"
-            v-model="creFrom.tag"
+            v-model="creFrom.tag_id"
             checkable
             :auto-expand-parent="autoExpandParent"
             :selected-keys="selectedKeys"
@@ -201,6 +201,7 @@ export default {
       this.text = '编辑'
       this.creFrom = item
       this.isEdit = true
+      this.creFrom.tag_id = this.creFrom.tag_id.split(',').map(Number)
     },
     add () {
       this.form.resetFields()

@@ -1,8 +1,10 @@
 <template>
-  <div class="gtb_statistics" v-if="infoArray.length>0">
+  <div class="gtb_statistics">
     <div v-for="(item, index) in statisticsData" :key="index">
       <img :src="item" alt="">
-      <p>{{ infoArray[index] }}</p>
+      <p v-if="index == 0">{{ userStat.upload }}</p>
+      <p v-else-if="index == 1">{{ userStat.download }}</p>
+      <p v-else>{{ userStat.like }}</p>
     </div>
   </div>
 </template>
@@ -31,14 +33,14 @@ export default {
     userStat: {
       immediate: true,
       handler: function (newval) {
-        this.setUserStat(newval)
+        // this.setUserStat(newval)
       }
     }
   },
   methods: {
-    setUserStat (info) {
-      this.infoArray = [info.upload, info.download, info.like]
-    }
+    // setUserStat (info) {
+    //   this.infoArray = [info.upload, info.download, info.like]
+    // }
   }
 }
 </script>

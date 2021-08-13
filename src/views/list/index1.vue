@@ -58,6 +58,7 @@
             <h5><h6>{{ item.title }}</h6></h5>
             <div class="gtb_list_label">
               <span v-for="(tag, index1) in item.tag" :key="index1">{{ tag }}</span>
+              <span v-if="!item.tag || item.tag.length == 0" style="opacity: 0">古腾堡</span>
             </div>
             <div class="gtb_list_icon">
               <span><img src="@/assets/look.png" alt="">{{ item.read }}</span>
@@ -448,11 +449,21 @@ export default {
           font: normal normal normal 16px/23px Microsoft YaHei;
           color: #263650;
           margin-right: 12px;
+          display: inline-block;
+          width: 70px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
         }
         span {
           font: normal normal normal 16px/23px Microsoft YaHei;
           color: #858585;
           margin-right: 12px;
+          display: inline-block;
+          width: 101px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
         }
         >div {
           margin-left: auto;
@@ -469,7 +480,7 @@ export default {
           }
           .ant-btn-primary:nth-child(2){
             background-color: #CE1111;
-            margin-left: 15px;
+            margin-left: 11px;
           }
           .disabled {
             background-color: #BCB9B9;
@@ -483,6 +494,12 @@ export default {
         // }
         // display: flex;
         // justify-content: space-around;
+        }
+         @media screen and (max-width: 1680px){
+          padding: 20px 10px;
+          i, span{
+            margin-right: 0;
+          }
         }
       }
     }

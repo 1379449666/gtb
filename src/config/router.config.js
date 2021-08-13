@@ -321,11 +321,11 @@ export const constantRouterMap = [
         name: 'binding-email',
         component: () => import(/* webpackChunkName: "user" */ '@/views/user/Email')
       },
-      // {
-      //   path: 'register',
-      //   name: 'register',
-      //   component: () => import(/* webpackChunkName: "user" */ '@/views/user/Register')
-      // },
+      {
+        path: 'register',
+        name: 'register',
+        component: () => import(/* webpackChunkName: "user" */ '@/views/user/Register')
+      },
       // {
       //   path: 'register-result',
       //   name: 'registerResult',

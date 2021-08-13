@@ -64,7 +64,8 @@ export default {
       setTimeout(() => {
         this.$notification.success({
           message: `你好, ${this.$store.getters.userInfos.nickname}`,
-          description: `${timeFix()}，欢迎回来`
+          description: `${timeFix()}，欢迎回来`,
+          duration: 2
         })
       }, 1000)
       this.isLoginError = false
