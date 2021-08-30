@@ -158,8 +158,7 @@ export default {
       })
     },
     getData () { // 获取数据
-        // console.log(storage.get('Access-Token'))
-      if (!this.inputType.type) return false
+      if (!(this.inputType.type + '')) return false
       index({ page: this.paging.page, offset: this.paging.offset, type: this.inputType.type, keywords: this.inputKeywords }).then(res => {
         this.indexList = res.result.list
         this.paging = res.result.paging
