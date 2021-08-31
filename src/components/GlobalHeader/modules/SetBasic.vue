@@ -27,7 +27,7 @@
           <a-input placeholder="请输入邮箱" v-model="creFrom.email"><a-icon slot="addonAfter" type="setting" @click="setEmail"/></a-input>
         </a-form-item>
 
-        <a-form-item label="头像" :labelCol="labelCol" :wrapperCol="wrapperCol" >
+        <a-form-item label="头像" :labelCol="labelCol" :wrapperCol="wrapperCol" class="head-portrait">
           <a-upload
             name="avatar"
             list-type="picture-card"
@@ -185,7 +185,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
  .avatar-uploader {
     height:100px;
     width:100px;
@@ -193,5 +193,8 @@ export default {
       height:100px;
       width:100px;
     }
+  }
+  .head-portrait {
+    height: 120px;
   }
 </style>

@@ -91,6 +91,7 @@ export default {
     editButtonIndex (index, item) {
       this.buttonIndex = index
       this.SET_SEARCH(item)
+      this.$router.push({ path: 'home' })
     },
     ...mapActions(['Logout']),
     handleLogout () { // 推出登录

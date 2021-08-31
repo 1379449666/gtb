@@ -12,8 +12,62 @@
   >
     <a-spin :spinning="confirmLoading">
       <a-form :form="form">
+        <a-form-item label="PPT上传" :labelCol="labelCol" :wrapperCol="wrapperCol" v-if="!isEdit">
+          <a-upload
+            accept=".ppt, .pptx"
+            name="avatar"
+            list-type="picture-card"
+            class="avatar-uploader"
+            :show-upload-list="false"
+            :before-upload="beforeUpload"
+            @change="(i) => handleChange(i, 'ppt')"
+            v-decorator="['ppt', {initialValue: creFrom.ppt}]"
+          >
+            <a-button > <a-icon type="upload" /> {{ creFrom.ppt ? creFrom.ppt.name : '上传文件' }} </a-button>
+          </a-upload>
+        </a-form-item>
+        <a-form-item label="PPT上传" :labelCol="labelCol" :wrapperCol="wrapperCol" v-else>
+          <a-upload
+            accept=".ppt, .pptx"
+            name="avatar"
+            list-type="picture-card"
+            class="avatar-uploader"
+            :show-upload-list="false"
+            :before-upload="beforeUpload"
+            @change="(i) => handleChange(i, 'ppt')"
+          >
+            <a-button > <a-icon type="upload" /> {{ creFrom.ppt ? '已上传' : '上传文件' }} </a-button>
+          </a-upload>
+        </a-form-item>
+        <a-form-item label="PDF上传" :labelCol="labelCol" :wrapperCol="wrapperCol" v-if="!isEdit">
+          <a-upload
+            accept=".pdf"
+            name="avatar"
+            list-type="picture-card"
+            class="avatar-uploader"
+            :show-upload-list="false"
+            :before-upload="beforeUpload"
+            @change="(i) => handleChange(i, 'pdf')"
+            v-decorator="['pdf', {initialValue: creFrom.pdf}]"
+          >
+            <a-button > <a-icon type="upload" /> {{ creFrom.pdf ? creFrom.pdf.name : '上传文件' }} </a-button>
+          </a-upload>
+        </a-form-item>
+        <a-form-item label="PDF上传" :labelCol="labelCol" :wrapperCol="wrapperCol" v-else>
+          <a-upload
+            name="avatar"
+            accept=".pdf"
+            list-type="picture-card"
+            class="avatar-uploader"
+            :show-upload-list="false"
+            :before-upload="beforeUpload"
+            @change="(i) => handleChange(i, 'pdf')"
+          >
+            <a-button > <a-icon type="upload" /> {{ creFrom.pdf ? '已上传' : '上传文件' }} </a-button>
+          </a-upload>
+        </a-form-item>
         <a-form-item label="方案名称" :labelCol="labelCol" :wrapperCol="wrapperCol" >
-          <a-input placeholder="20字以内，简单清晰地表述" v-decorator="['title', {initialValue: creFrom.title, rules: [{required: true, message: '20字以内，简单清晰地表述'}]}]"></a-input>
+          <a-input placeholder="30字以内，简单清晰地表述" :maxLength="30" v-decorator="['title', {initialValue: creFrom.title, rules: [{required: true, message: '30字以内，简单清晰地表述'}]}]"></a-input>
         </a-form-item>
         <a-form-item label="方案分类" :labelCol="labelCol" :wrapperCol="wrapperCol" style="margin-bottom: 8px;">
           <!-- <a-select placeholder="请选择分类类型" @change="selectHandleChange" v-decorator="[ 'type', {initialValue: creFrom.type, rules: [{required: true, message: '请选择分类！'}]}]">
@@ -24,6 +78,7 @@
           </a-radio-group>
         </a-form-item>
         <a-form-item label="标签" :labelCol="labelCol" :wrapperCol="wrapperCol">
+          <!-- <radio-list :radioList="treeData" :tagId="creFrom.tag_id"></radio-list> -->
           <a-tree
             v-if="treeData.length>0"
             v-model="creFrom.tag_id"
@@ -49,57 +104,7 @@
             :tree-data="treeData"/> -->
         </a-form-item>
         <a-form-item label="讲述建议" :labelCol="labelCol" :wrapperCol="wrapperCol" >
-          <a-input style="height:80px;" placeholder="请输入..." v-decorator="['describe', {initialValue: creFrom.describe, rules: [{required: true, message: '请输入SKU商品编号！'}]}]" type="textarea" />
-        </a-form-item>
-        <a-form-item label="PPT上传" :labelCol="labelCol" :wrapperCol="wrapperCol" v-if="!isEdit">
-          <a-upload
-            name="avatar"
-            list-type="picture-card"
-            class="avatar-uploader"
-            :show-upload-list="false"
-            :before-upload="beforeUpload"
-            @change="(i) => handleChange(i, 'ppt')"
-            v-decorator="['ppt', {initialValue: creFrom.ppt}]"
-          >
-            <a-button > <a-icon type="upload" /> {{ creFrom.ppt ? creFrom.ppt.name : '上传文件' }} </a-button>
-          </a-upload>
-        </a-form-item>
-        <a-form-item label="PPT上传" :labelCol="labelCol" :wrapperCol="wrapperCol" v-else>
-          <a-upload
-            name="avatar"
-            list-type="picture-card"
-            class="avatar-uploader"
-            :show-upload-list="false"
-            :before-upload="beforeUpload"
-            @change="(i) => handleChange(i, 'ppt')"
-          >
-            <a-button > <a-icon type="upload" /> {{ creFrom.ppt ? '已上传' : '上传文件' }} </a-button>
-          </a-upload>
-        </a-form-item>
-        <a-form-item label="PDF上传" :labelCol="labelCol" :wrapperCol="wrapperCol" v-if="!isEdit">
-          <a-upload
-            name="avatar"
-            list-type="picture-card"
-            class="avatar-uploader"
-            :show-upload-list="false"
-            :before-upload="beforeUpload"
-            @change="(i) => handleChange(i, 'pdf')"
-            v-decorator="['pdf', {initialValue: creFrom.pdf}]"
-          >
-            <a-button > <a-icon type="upload" /> {{ creFrom.pdf ? creFrom.pdf.name : '上传文件' }} </a-button>
-          </a-upload>
-        </a-form-item>
-        <a-form-item label="PDF上传" :labelCol="labelCol" :wrapperCol="wrapperCol" v-else>
-          <a-upload
-            name="avatar"
-            list-type="picture-card"
-            class="avatar-uploader"
-            :show-upload-list="false"
-            :before-upload="beforeUpload"
-            @change="(i) => handleChange(i, 'pdf')"
-          >
-            <a-button > <a-icon type="upload" /> {{ creFrom.pdf ? '已上传' : '上传文件' }} </a-button>
-          </a-upload>
+          <a-input style="height:80px;" placeholder="讲述建议将会在评论区里展示" type="textarea" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -109,9 +114,11 @@
 <script>
 import { Tree } from 'ant-design-vue'
 import { tagList } from '@/api/index'
+import RadioList from './Radio'
 export default {
   components: {
-    'a-tree': Tree
+    'a-tree': Tree,
+    RadioList
   },
   props: {
     catigroyList: {
@@ -235,14 +242,10 @@ export default {
     beforeUpload (file) {
       const type = file.name.split('.').pop()
       const isJpgOrPng = type === 'ppt' || type === 'pptx' || type === 'pdf'
-      if (!isJpgOrPng) {
-        return this.$message.error('请上传pdf或者ppt文件!')
-      }
+      if (!isJpgOrPng) return this.$message.error('请上传pdf或者ppt文件!')
       const isLt2M = file.size / 1024 / 1024 < 100
-      if (!isLt2M) {
-        this.$message.error('文件上限 100MB!')
-        return
-      }
+      if (!isLt2M) return this.$message.error('文件上限 100MB!')
+      if (type === 'ppt' || type === 'pptx') this.$nextTick(() => { this.form.setFieldsValue({ title: file.name.split('.')[0] }) })
       return false
     },
     handleChange (info, type) {
@@ -280,6 +283,7 @@ export default {
 
 <style lang="less">
 .avatar-uploader {
+  height: 30px !important;
   .ant-upload.ant-upload-select-picture-card {
     height: auto;
     border: 0;

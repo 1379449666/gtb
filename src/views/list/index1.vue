@@ -162,7 +162,6 @@ export default {
       index({ page: this.paging.page, offset: this.paging.offset, type: this.inputType.type, keywords: this.inputKeywords }).then(res => {
         this.indexList = res.result.list
         this.paging = res.result.paging
-        console.log(this.paging)
       })
     },
     getHotKey () {
@@ -171,13 +170,13 @@ export default {
       })
     },
     operations (item) {
-      if (!this.inputType.type) return false
+      if (!(this.inputType.type + '')) return false
       this.paging = {
         total: 0, // 总条数
         offset: 15, // 每页多少条数据
         page: 1 // 当前页
       }
-      console.log('--------')
+      // console.log('--------')
       this.getData()
     },
     onShowSizeChange (current, pageSize) {

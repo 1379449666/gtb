@@ -61,7 +61,11 @@
         <div @click="down($route.query.id, 'pdf', '1')" :class="infoData.info.pdf ? '' : 'disabled'">下载PDF</div>
       </div>
     </div>
-    <div class="gtb_comment flex" :style="{ height:height + 'px' }">
+    <!-- <div class="gtb_comment flex" :style="{ height:height + 'px' }"> -->
+    <div class="center-img">
+      <div class="img_wap"><img :src="infoData.info.cover" alt="" srcset=""></div>
+    </div>
+    <!-- <div class="gtb_comment flex">
       <div><div ref="bgc"><img :src="infoData.info.cover" alt=""></div></div>
       <div>
         <div class="gtb_comment_list" id="data-list-content">
@@ -78,6 +82,22 @@
           <a-input placeholder="可以备注、评论或补充客户信息" v-model="comment"/>
           <div @click="addComment">发布</div>
         </div>
+      </div>
+    </div> -->
+    <div class="gtb_com">
+      <div class="gtb_comment_list" id="data-list-content">
+        <div class="gtb_comment_info" v-for="(item, index) in commentList" :key="index">
+          <div class="gtb_details_info_left flex">
+            <img :src="item.headimg" alt="">
+            <i>{{ item.username }}</i>
+            <span>{{ item.time }}</span>
+          </div>
+          <p>{{ item.content }}</p>
+        </div>
+      </div>
+      <div class="gtb_comment_release flex">
+        <a-input placeholder="可以备注、评论或补充客户信息" v-model="comment"/>
+        <div @click="addComment">发布</div>
       </div>
     </div>
     <add-tags ref="modal" @add="onAdd" @edit="onEdit"></add-tags>
@@ -210,7 +230,7 @@ watch: {
       info({ pid: this.$route.query.id }).then(res => {
         if (res.code !== 200) return this.$message.error(res.msg)
         this.infoData = res.result
-        this.height = this.$refs.bgc.clientWidth / 16 * 9
+        // this.height = this.$refs.bgc.clientWidth / 16 * 9
       })
     },
     is_like () { // 点赞/取消
@@ -362,13 +382,15 @@ i {
     border-radius: 10px;
     overflow: hidden;
     align-items: flex-start;
+    flex-direction: column;
     >div:first-child {
       // flex: 1;
-      width: calc(100% - 405px);
+      // width: calc(100% - 405px);
+      width: 100%;
       >div {
-        // padding-bottom: 56.25%;
+        padding-bottom: 56.25%;
         height: 100%;
-        // position: relative;
+        position: relative;
       }
       img {
         width: 100%;
@@ -427,6 +449,75 @@ i {
       }
     }
   }
+  .center-img {
+    // margin: 0 65px;
+    margin-top: 36px;
+    border-radius: 10px;
+    .img_wap {
+      padding-bottom: 56.25%;
+      width: 100%;
+      position: relative;
+      img {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: 10px;
+      }
+    }
+  }
+  .gtb_com {
+    border-radius: 10px;
+    margin-top: 36px;
+    width: 100%;
+    background-color: #fff;
+    padding: 33px 33px 86px;
+    height: 500px;
+    position: relative;
+    p {
+      font: normal normal normal 16px/26px Microsoft YaHei;
+      color: #858585;
+      margin-top: 5px;
+    }
+    .gtb_comment_list {
+      overflow: hidden;
+      overflow-y: auto; //出现垂直滚动条;
+      height: 100%;
+    }
+    .gtb_comment_info {
+      margin-top: 20px;
+    }
+    .gtb_comment_info:nth-child(1) {
+      margin-top: 0;
+    }
+    .gtb_comment_release {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 86px;
+      border-top: 1px solid #DEDEDE;
+      padding: 35px;
+      background-color: #fff;
+      input {
+        width: 85%;
+        height: 36px;
+        font: normal normal normal 16px Microsoft YaHei;
+      }
+      >div {
+        width: 70px;
+        height: 36px;
+        background-color: #7AB800;
+        cursor: pointer;
+        text-align: center;
+        font: normal normal bold 17px/36px Microsoft YaHei;
+        color: #FFFFFF;
+        // margin-left: 15px;
+        margin: 0 auto;
+      }
+    }
+  }
 }
 .topTitle {
   display: flex;
@@ -470,25 +561,6 @@ i {
     // .ant-btn-primary:nth-child(3){
     //   background-color: #DC3752;
     // }
-  }
-}
-.center-img {
-  margin: 0 65px;
-  padding: 20px;
-  border: 1px solid #707070;
-  border-radius: 10px;
-  .img_wap {
-    padding-bottom: 56.25%;
-    width: 100%;
-    position: relative;
-    img {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      border-radius: 10px;
-    }
   }
 }
 .uploadedOn {
