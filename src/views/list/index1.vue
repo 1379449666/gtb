@@ -204,9 +204,6 @@ export default {
       })
     },
     onAdd (params) { // 新增方案
-      console.log(params)
-      // return false
-      // eslint-disable-next-line no-unreachable
       var formData = new FormData()
       if (params.ppt) formData.append('ppt', params.ppt)
       if (params.pdf) formData.append('pdf', params.pdf)

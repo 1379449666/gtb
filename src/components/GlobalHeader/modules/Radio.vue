@@ -1,14 +1,16 @@
 <template>
-  <div>
+  <div class="gtb-radios">
     <div class="list-item" v-for="(item, index) in radioList" :key="index">
-      <div class="item-name">
-        <span v-if="item.disableCheckbox" >{{ item.tag }}</span>
-        <div v-if="item.disableCheckbox">
-          <a-radio-group v-model="value[index]">
-            <i>{{ getValue(item.child, index) }}</i>
-            <!-- <a-radio-group v-decorator="['biaoqian' + item, {initialValue: getValue(item.child), rules: [{required: true, message: '请选择！'}]}]"> -->
-            <a-radio :value="item.id" v-for="items in item.child" :key="items.id">{{ items.tag }}</a-radio>
-          </a-radio-group>
+      <div class="item-name" :class="item.flag ? 'child-radio' : ''">
+        <span >{{ item.title }}</span>
+        <div v-if="item.tag.length > 0">
+          <!-- <a-radio-group v-decorator="['biaoqian' + item.id, {initialValue: 5, rules: [{required: true, message: '请选择！'}]}]" @change="onChange"> -->
+          <!-- <a-radio-group v-model="tagId[index]" @change="onChange">
+            <a-radio :value="items.id" v-for="items in item.tag" :key="items.id">{{ items.tag }}</a-radio>
+          </a-radio-group> -->
+          <a-checkbox-group v-model="value[index]" @change="onChange" >
+            <a-checkbox :value="items.id" v-for="items in item.tag" :key="items.id">{{ items.tag }}</a-checkbox>
+          </a-checkbox-group>
         </div>
       </div>
       <div v-if="item.child" class="children-item">
@@ -31,35 +33,36 @@ export default {
     tagId: {
       type: Array,
       default: () => {
-        return [50, 28]
+        return []
       }
     }
   },
   data () {
     return {
-      value: []
+      value: this.tagId,
+      form: this.$form.createForm(this)
     }
   },
   methods: {
-    gtbFilter (a) {
-      console.log(this)
-      // let intersection = a.filter(v => b.includes(v))
-      a.filter(function (v) { return this.tagId.indexOf(v) > -1 })
-    },
-    getValue (a, index) {
-      var idArray = []
-      for (let index = 0; index < a.length; index++) {
-        if (a[index].id) idArray.push(a[index].id)
-      }
-      const value = idArray.filter(v => this.tagId.includes(v))
-      // this.$nextTick(() => {
-        // for (let index = 0; index < a.length; index++) {
-        //   this.get
-        // }
-      // })
-       this.value[index] = value[0]
-       console.log(this.value)
+     onChange () {
+       this.$emit('radio', this.value.reduce((prev, curr) => (prev.concat(curr)), []))
     }
   }
 }
 </script>
+
+<style lang="less" scoped>
+.gtb-radios {
+ .child-radio {
+    padding-left: 20px;
+  }
+  .list-item .ant-checkbox-wrapper {
+    margin-left: 0;
+    margin-right: 10px;
+  }
+  .item-name span{
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 14px;
+  }
+}
+</style>

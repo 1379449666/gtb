@@ -77,9 +77,9 @@
             <a-radio :value="item.type" v-for="item in radioList" :key="item.type">{{ item.title }}</a-radio>
           </a-radio-group>
         </a-form-item>
-        <a-form-item label="标签" :labelCol="labelCol" :wrapperCol="wrapperCol">
-          <!-- <radio-list :radioList="treeData" :tagId="creFrom.tag_id"></radio-list> -->
-          <a-tree
+        <a-form-item label="" :labelCol="{xs: { span: 2 },sm: { span: 2 }}" :wrapperCol="{xs: { span: 24, offset: 3 },sm: { span: 19, offset: 4 }}">
+          <radio-list :radioList="es" :tagId="re" @radio="getRadio"></radio-list>
+          <!-- <a-tree
             v-if="treeData.length>0"
             v-model="creFrom.tag_id"
             checkable
@@ -91,7 +91,7 @@
             @expand="onExpand"
             @select="onSelect"
             @check="onCheck"
-          />
+          /> -->
           <!-- <a-tree
             v-if="treeData.length>0"
             v-model="checkedKeys"
@@ -104,7 +104,7 @@
             :tree-data="treeData"/> -->
         </a-form-item>
         <a-form-item label="讲述建议" :labelCol="labelCol" :wrapperCol="wrapperCol" >
-          <a-input style="height:80px;" placeholder="讲述建议将会在评论区里展示" type="textarea" />
+          <a-input style="height:80px;" placeholder="讲述建议将会在评论区里展示" type="textarea" v-decorator="['describe', {initialValue: creFrom.describe}]" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -165,7 +165,9 @@ export default {
         children: 'child',
         title: 'tag',
         key: 'id'
-      }
+      },
+      es: [],
+      re: []
     }
   },
    watch: {
@@ -179,28 +181,46 @@ export default {
   methods: {
     getTag () {
       tagList().then(res => {
-        console.log(res)
         this.treeData = res.result.list
+        var newArr = res.result.list
+        this.digui(newArr)
       })
     },
-     onExpand (expandedKeys) { // 展开/收起节点时触发
-     return false
-      // eslint-disable-next-line no-unreachable
-      console.log('onExpand', expandedKeys)
-      // if not set autoExpandParent to false, if children expanded, parent can not collapse.
-      // or, you can remove all expanded children keys.
-      this.expandedKeys = expandedKeys
-      this.autoExpandParent = false
+    digui (item, flag = false) {
+      for (let index = 0; index < item.length; index++) {
+        const element = item[index]
+        if (element.child) { // disableCheckbox为true, 以及有child 说明是 单独的一个数组
+          // if (this.isEdit) {
+          //   var idArray = []
+          //   for (let index = 0; index < element.child.length; index++) {
+          //     if (element.child[index].id) idArray.push(element.child[index].id)
+          //   }
+          //   const value = idArray.filter(v => this.creFrom.tag_id.includes(v))
+          //   if (value.length === 0) this.re[index] = undefined
+          //   this.re[index] = value
+          // }
+          var idArray = []
+          for (let i = 0; i < element.child.length; i++) {
+            const tag = element.child[i].id
+            idArray.push(tag)
+          }
+          var obj = {
+            title: element.tag,
+            tag: element.child,
+            flag: false,
+            idArray
+          }
+          if (flag) {
+            obj.flag = true
+          }
+          if (element.tag === '行业标签') obj.tag = []
+          this.es.push(obj)
+          this.digui(element.child, true)
+        }
+      }
     },
-    onCheck (checkedKeys) { // 点击复选框事件
-      console.log('onCheck', checkedKeys)
-      this.checkedKeys = checkedKeys
-    },
-    onSelect (selectedKeys, info) { // 点击树节点触发
-     return false
-      // eslint-disable-next-line no-unreachable
-      console.log('onSelect', info)
-      this.selectedKeys = selectedKeys
+    getRadio (e) {
+      this.checkedKeys = e
     },
     edit (item) {
       this.form.resetFields()
@@ -208,20 +228,27 @@ export default {
       this.text = '编辑'
       this.creFrom = item
       this.isEdit = true
-      this.creFrom.tag_id = this.creFrom.tag_id.split(',').map(Number)
+      this.creFrom.tag_id = this.checkedKeys = this.creFrom.tag_id.split(',').map(Number)
+      for (let index = 0; index < this.es.length; index++) {
+        const value = this.es[index].idArray.filter(v => this.creFrom.tag_id.includes(v))
+        if (value.length === 0) this.re[index] = undefined
+        this.re[index] = value
+      }
     },
     add () {
       this.form.resetFields()
       this.creFrom = {}
+      this.checkedKeys = []
       this.visible = true
       this.text = '新建'
       this.isEdit = false
+      this.re = []
     },
     handleSubmit () {
       const { form: { validateFields } } = this
-      this.confirmLoading = true
       validateFields((errors, values) => {
         if (!errors) {
+          this.confirmLoading = true
           var param = {
             ppt: typeof this.creFrom.ppt === 'boolean' ? false : this.creFrom.ppt,
             pdf: typeof this.creFrom.pdf === 'boolean' ? false : this.creFrom.pdf,
@@ -276,6 +303,25 @@ export default {
     },
     handLoading () {
      this.confirmLoading = false
+    },
+    onExpand (expandedKeys) { // 展开/收起节点时触发
+     return false
+      // eslint-disable-next-line no-unreachable
+      console.log('onExpand', expandedKeys)
+      // if not set autoExpandParent to false, if children expanded, parent can not collapse.
+      // or, you can remove all expanded children keys.
+      this.expandedKeys = expandedKeys
+      this.autoExpandParent = false
+    },
+    onCheck (checkedKeys) { // 点击复选框事件
+      console.log('onCheck', checkedKeys)
+      this.checkedKeys = checkedKeys
+    },
+    onSelect (selectedKeys, info) { // 点击树节点触发
+     return false
+      // eslint-disable-next-line no-unreachable
+      console.log('onSelect', info)
+      this.selectedKeys = selectedKeys
     }
   }
 }
