@@ -39,6 +39,9 @@
             <a-button > <a-icon type="upload" /> {{ creFrom.ppt ? '已上传' : '上传文件' }} </a-button>
           </a-upload>
         </a-form-item>
+        <a-form-item label="缩略图" :labelCol="labelCol" :wrapperCol="wrapperCol" v-if="!isEdit&&img!==''">
+          <img :src="img" alt="" class="simg">
+        </a-form-item>
         <a-form-item label="PDF上传" :labelCol="labelCol" :wrapperCol="wrapperCol" v-if="!isEdit">
           <a-upload
             accept=".pdf"
@@ -70,38 +73,12 @@
           <a-input placeholder="30字以内，简单清晰地表述" :maxLength="30" v-decorator="['title', {initialValue: creFrom.title, rules: [{required: true, message: '30字以内，简单清晰地表述'}]}]"></a-input>
         </a-form-item>
         <a-form-item label="方案分类" :labelCol="labelCol" :wrapperCol="wrapperCol" style="margin-bottom: 8px;">
-          <!-- <a-select placeholder="请选择分类类型" @change="selectHandleChange" v-decorator="[ 'type', {initialValue: creFrom.type, rules: [{required: true, message: '请选择分类！'}]}]">
-            <a-select-option :value="item.type" v-for="(item,index) in $store.getters.typelist" :key="index" >{{ item.title }}</a-select-option>
-          </a-select> -->
           <a-radio-group v-decorator="['type', {initialValue: creFrom.type, rules: [{required: true, message: '请选择方案类型！'}]}]">
             <a-radio :value="item.type" v-for="item in radioList" :key="item.type">{{ item.title }}</a-radio>
           </a-radio-group>
         </a-form-item>
         <a-form-item label="" :labelCol="{xs: { span: 2 },sm: { span: 2 }}" :wrapperCol="{xs: { span: 24, offset: 3 },sm: { span: 19, offset: 4 }}">
           <radio-list :radioList="es" :tagId="re" @radio="getRadio"></radio-list>
-          <!-- <a-tree
-            v-if="treeData.length>0"
-            v-model="creFrom.tag_id"
-            checkable
-            :auto-expand-parent="autoExpandParent"
-            :selected-keys="selectedKeys"
-            :tree-data="treeData"
-            defaultExpandAll
-            :replace-fields="replaceFields"
-            @expand="onExpand"
-            @select="onSelect"
-            @check="onCheck"
-          /> -->
-          <!-- <a-tree
-            v-if="treeData.length>0"
-            v-model="checkedKeys"
-            checkable
-            @check="onCheck"
-            :selected-keys="selectedKeys"
-            :replace-fields="replaceFields"
-            defaultExpandAll
-            showLine
-            :tree-data="treeData"/> -->
         </a-form-item>
         <a-form-item label="讲述建议" :labelCol="labelCol" :wrapperCol="wrapperCol" >
           <a-input style="height:80px;" placeholder="讲述建议将会在评论区里展示" type="textarea" v-decorator="['describe', {initialValue: creFrom.describe}]" />
@@ -115,6 +92,8 @@
 import { Tree } from 'ant-design-vue'
 import { tagList } from '@/api/index'
 import RadioList from './Radio'
+import storage from 'store'
+import { ACCESS_TOKEN } from '@/store/mutation-types'
 export default {
   components: {
     'a-tree': Tree,
@@ -149,18 +128,15 @@ export default {
       loading: false,
       creFrom: {
         name: '',
-        firstCateId: [],
-        img: ''
+        firstCateId: []
       },
+      img: '',
       text: '',
       form: this.$form.createForm(this),
       isEdit: false,
       treeData: [],
       radioList: this.$store.getters.typelist,
-      expandedKeys: ['0-0-0'], // 展开指定的树节点
-      autoExpandParent: true, // 是否自动展开父节点
       checkedKeys: [], // 默认选中的值
-      selectedKeys: [], // 设置选中的树节点(后面)
       replaceFields: {
         children: 'child',
         title: 'tag',
@@ -243,6 +219,7 @@ export default {
       this.text = '新建'
       this.isEdit = false
       this.re = []
+      this.img = ''
     },
     handleSubmit () {
       const { form: { validateFields } } = this
@@ -254,7 +231,7 @@ export default {
             pdf: typeof this.creFrom.pdf === 'boolean' ? false : this.creFrom.pdf,
             title: values.title,
             type: values.type,
-            describe: values.describe,
+            describe: values.describe || '',
             tag: this.checkedKeys.join(',')
           }
           if (this.isEdit) param.id = this.creFrom.id
@@ -278,15 +255,19 @@ export default {
     handleChange (info, type) {
       console.log(info, type)
       this.creFrom[type] = info.file
-      // var formData = new FormData()
-      // formData.append('file', info.file)
-      // this.$http.post('/file/imageUpload', formData).then(res => {
-      //   if (res.data !== null) {
-      //     this.img = `http://${res.data}`
-      //   } else {
-      //     this.$message.error('上传失败')
-      //   }
-      // })
+      var formData = new FormData()
+      formData.append('file', info.file)
+      formData.append('session_id', storage.get(ACCESS_TOKEN))
+      // formData.append('test', 1)
+      if (type === 'ppt' && !this.isEdit) {
+        this.$http.post('/project/getCover', formData).then(res => {
+          if (res.code === 200) {
+            this.img = `${res.result.cover}`
+          } else {
+            // this.$message.error('')
+          }
+        })
+      }
     },
     successSubmit () {
      this.form.resetFields()
@@ -303,25 +284,6 @@ export default {
     },
     handLoading () {
      this.confirmLoading = false
-    },
-    onExpand (expandedKeys) { // 展开/收起节点时触发
-     return false
-      // eslint-disable-next-line no-unreachable
-      console.log('onExpand', expandedKeys)
-      // if not set autoExpandParent to false, if children expanded, parent can not collapse.
-      // or, you can remove all expanded children keys.
-      this.expandedKeys = expandedKeys
-      this.autoExpandParent = false
-    },
-    onCheck (checkedKeys) { // 点击复选框事件
-      console.log('onCheck', checkedKeys)
-      this.checkedKeys = checkedKeys
-    },
-    onSelect (selectedKeys, info) { // 点击树节点触发
-     return false
-      // eslint-disable-next-line no-unreachable
-      console.log('onSelect', info)
-      this.selectedKeys = selectedKeys
     }
   }
 }
@@ -340,5 +302,9 @@ export default {
   .ant-upload.ant-upload-select-picture-card > .ant-upload {
     padding: 4px 0;
   }
+}
+.simg {
+  width: 240px;
+  height: 135px;
 }
 </style>

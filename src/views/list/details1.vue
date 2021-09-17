@@ -171,7 +171,8 @@ watch: {
           projectDelete({ pid: _that.$route.query.id }).then(res => {
             if (res.code !== 200) return _that.$message.error(res.msg)
             _that.$message.success(res.msg)
-            _that.$router.history.go('-1')
+            // _that.$router.history.go('-1')
+            _that.$router.push({ path: 'home' })
           })
         }
       })

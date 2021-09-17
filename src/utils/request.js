@@ -1,3 +1,12 @@
+/*
+ * @Author: bert
+ * @Date: 2021-09-03 08:57:48
+ * @LastEditTime: 2021-09-15 14:18:13
+ * @LastEditors: bert
+ * @Description: 新增及编辑
+ * @FilePath: /guTengBao/src/utils/request.js
+ * 我家门前有两棵树，一棵是枣树，另一棵也是枣树。
+ */
 
 import axios from 'axios'
 import store from '@/store'
@@ -54,7 +63,7 @@ request.interceptors.request.use(config => {
   //   config.headers['Access-Token'] = token
   // }
     // console.log(config.url)
-    if (config.url === '/project/add' || config.url === '/project/edit' || config.url === '/user/uploadFileImg') {
+    if (config.url === '/project/add' || config.url === '/project/edit' || config.url === '/user/uploadFileImg' || config.url === '/project/getCover') {
   } else {
     config.data = Qs.stringify({ session_id: token, ...config.data })
     // config.data = Qs.stringify({ session_id: token, ...config.data, test: 1 })
