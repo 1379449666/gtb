@@ -114,11 +114,12 @@
   <!-- <div class="onClickSub" id="weixin" @click="handleSubmit">
     点击登录
   </div> -->
+  <!-- :redirect_uri="encodeURIComponent('https://gtb.zppinc.com/' + 'e/#/user/getcode')" -->
   <wxlogin
     :appid="'wx7612256ee73bf98d'"
     :scope="'snsapi_login'"
     :theme="'black'"
-    :redirect_uri="encodeURIComponent('https://gtb.zppinc.com/' + 'e/#/user/getcode')"
+    :redirect_uri="encodeURIComponent('https://ams-gtb.com/' + 'e/#/user/getcode')"
     :href="'data:text/css;LmltcG93ZXJCb3ggLnFyY29kZSB7d2lkdGg6IDIwMHB4O30NCi5pbXBvd2VyQm94IC50aXRsZSB7ZGlzcGxheTogbm9uZTt9DQouaW1wb3dlckJveCAuaW5mbyB7d2lkdGg6IDIwMHB4O30NCi5zdGF0dXNfaWNvbiB7ZGlzcGxheTogbm9uZX0NCi5pbXBvd2VyQm94IC5zdGF0dXMge3RleHQtYWxpZ246IGNlbnRlcjt9'"
     rel="external nofollow"
   >

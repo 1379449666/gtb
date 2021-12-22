@@ -1,10 +1,10 @@
 <!--
  * @Author: wangChao
  * @Date: 2021-06-05 11:50:25
- * @LastEditTime: 2021-06-22 13:55:32
- * @LastEditors: wangChao
+ * @LastEditTime: 2021-11-18 22:53:05
+ * @LastEditors: bert
  * @Description: pdf列表
- * @FilePath: /guTengBao/src/views/list/index.vue
+ * @FilePath: /guTengBao/src/views/list/index1.vue
  * 我家门前有两棵树，一棵是枣树，另一棵也是枣树。
 -->
 <template>
@@ -13,7 +13,7 @@
       <div class="flex item-center">
         <div class="flex item-center gtb_search_input" >
           <span>{{ inputType.title }} |</span>
-          <a-input placeholder="输入关键词搜索" v-model="inputKeywords" allowClear/>
+          <a-input placeholder="输入关键词搜索" v-model="inputKeywords" @pressEnter="getData" allowClear/>
         </div>
         <div class="gtb_search" @click="getData">搜索</div>
       </div>
@@ -22,31 +22,6 @@
         <span class="gtb-hot-search" v-for="(item, index) in hotKey" :key="index" @click="setHotKey(item.keywords)">{{ item.keywords }}</span>
       </div>
       <div class="flex">
-        <a-pagination
-          v-if="paging.total>0"
-          show-size-changer
-          :default-current="paging.page"
-          :default-page-size="paging.offset"
-          :total="paging.total"
-          :show-less-items="true"
-          @showSizeChange="onShowSizeChange"
-          @change="onChange"
-          :page-size-options="pageSizeOptions"
-        />
-        <!-- <a-pagination
-          v-if="paging.total>0"
-          :default-current="paging.page"
-          :total="paging.total"
-          @change="onChange"
-          simple
-          :page-size-options="pageSizeOptions"
-        /> -->
-        <!-- <a-dropdown>
-          <a-menu slot="overlay" @click="handleMenuClick">
-            <a-menu-item v-for="item in pageSizeOptions" :key="item">{{ item }}条/页</a-menu-item>
-          </a-menu>
-          <a-button style="margin-left: 8px;height: initial;"> {{ paging.offset }}条/页 <a-icon type="down" /> </a-button>
-        </a-dropdown> -->
         <div class="upload" @click="$refs.modal.add()">上传</div>
       </div>
     </div>
@@ -78,6 +53,33 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="flex gtb-pagination">
+      <a-pagination
+        v-if="paging.total>0"
+        show-size-changer
+        :default-current="paging.page"
+        :default-page-size="paging.offset"
+        :total="paging.total"
+        :show-less-items="true"
+        @showSizeChange="onShowSizeChange"
+        @change="onChange"
+        :page-size-options="pageSizeOptions"
+      />
+      <!-- <a-pagination
+        v-if="paging.total>0"
+        :default-current="paging.page"
+        :total="paging.total"
+        @change="onChange"
+        simple
+        :page-size-options="pageSizeOptions"
+      /> -->
+      <!-- <a-dropdown>
+        <a-menu slot="overlay" @click="handleMenuClick">
+          <a-menu-item v-for="item in pageSizeOptions" :key="item">{{ item }}条/页</a-menu-item>
+        </a-menu>
+        <a-button style="margin-left: 8px;height: initial;"> {{ paging.offset }}条/页 <a-icon type="down" /> </a-button>
+      </a-dropdown> -->
     </div>
     <org-modal ref="modal" @add="onAdd"></org-modal>
   </div>
@@ -284,24 +286,17 @@ export default {
     }
   }
   >div:nth-child(3) {
-    .ant-pagination {
-      flex: 1 1 auto;
-      /deep/ .ant-pagination-prev, .ant-pagination-next, .ant-pagination-jump-prev, .ant-pagination-jump-next {
-        height: 36px;
-      }
-      // display: flex;
-      // align-items: center;
-      /deep/ .ant-pagination-simple-pager input {
-        margin-right: 0;
-        padding: 0;
-      }
-      /deep/ .ant-pagination-slash {
-        margin-right: 5px;
-      }
-      // ul {
-      //   display: flex;
-      //   align-items: center;
-      // }
+    justify-content: flex-end;
+    .upload {
+      width: 80px;
+      height: 36px;
+      border-radius: 4px;
+      background: #7AB800;
+      text-align: center;
+      font: normal normal bold 17px/36px Microsoft YaHei;
+      color: #fff;
+      margin-left: 10px;
+      cursor: pointer;
     }
   }
   .gtb_search_input {
@@ -339,18 +334,6 @@ export default {
   /deep/ .ant-input:focus {
     box-shadow: 0 0 0 0;// 透明背景
   }
-  .upload {
-    width: 80px;
-    height: 36px;
-    border-radius: 4px;
-    background: #7AB800;
-    text-align: center;
-    font: normal normal bold 17px/36px Microsoft YaHei;
-    color: #fff;
-    margin-left: 10px;
-    cursor: pointer;
-  }
-
 }
 ._left_pdf {
     margin-top: 40px;
@@ -511,5 +494,11 @@ export default {
         transform: translateX(-100%);
         -webkit-transform: translateX(-100%);
     }
+}
+.gtb-pagination {
+  justify-content: flex-end;
+  /deep/ .ant-pagination-prev, .ant-pagination-next, .ant-pagination-jump-prev, .ant-pagination-jump-next {
+    height: 36px;
+  }
 }
 </style>

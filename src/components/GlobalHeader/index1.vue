@@ -1,17 +1,17 @@
 <!--
  * @Author: wangChao
  * @Date: 2021-06-05 10:56:35
- * @LastEditTime: 2021-06-17 14:41:43
- * @LastEditors: wangChao
+ * @LastEditTime: 2021-12-22 19:42:57
+ * @LastEditors: bert
  * @Description: 公共头部
- * @FilePath: /guTengBao/src/components/GlobalHeader/index.vue
+ * @FilePath: /guTengBao/src/components/GlobalHeader/index1.vue
  * 我家门前有两棵树，一棵是枣树，另一棵也是枣树。
 -->
 <template>
   <div>
     <header>
       <div class="gtb_logo" @click="$router.push({ path: 'home' })">
-        <img src="/e/logo.png" alt="">
+        <img src="/e/logo.jpg" alt="">
         <div>
           <span>古腾堡 - Beta 2</span>
           <span>AMS策划方案 - 模块化交付</span>
@@ -201,8 +201,11 @@ header {
   }
   .gtb_label_type {
     margin-right: 4%;
+    width: 40%;
     display: flex;
+    overflow: auto;
     span {
+      flex: none;
       display: inline-block;
       width: 80px;
       height: 36px;

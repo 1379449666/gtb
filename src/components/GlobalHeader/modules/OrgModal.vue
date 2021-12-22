@@ -21,10 +21,11 @@
             :show-upload-list="false"
             :before-upload="beforeUpload"
             @change="(i) => handleChange(i, 'ppt')"
-            v-decorator="['ppt', {initialValue: creFrom.ppt}]"
+            v-decorator="['ppt', {initialValue: creFrom.ppt, rules: [{required: true, message: '请上传ppt'}]}]"
           >
             <a-button > <a-icon type="upload" /> {{ creFrom.ppt ? creFrom.ppt.name : '上传文件' }} </a-button>
           </a-upload>
+          <p class="sx-notes">注：除报告外, 必须上传PPT文件</p>
         </a-form-item>
         <a-form-item label="PPT上传" :labelCol="labelCol" :wrapperCol="wrapperCol" v-else>
           <a-upload
@@ -38,6 +39,7 @@
           >
             <a-button > <a-icon type="upload" /> {{ creFrom.ppt ? '已上传' : '上传文件' }} </a-button>
           </a-upload>
+          <p class="sx-notes">注：除报告外, 必须上传PPT文件</p>
         </a-form-item>
         <a-form-item label="缩略图" :labelCol="labelCol" :wrapperCol="wrapperCol" v-if="!isEdit&&img!==''">
           <img :src="img" alt="" class="simg">
@@ -55,6 +57,7 @@
           >
             <a-button > <a-icon type="upload" /> {{ creFrom.pdf ? creFrom.pdf.name : '上传文件' }} </a-button>
           </a-upload>
+          <p class="sx-notes">为保证正确显示缩略图, 建议也上传PDF</p>
         </a-form-item>
         <a-form-item label="PDF上传" :labelCol="labelCol" :wrapperCol="wrapperCol" v-else>
           <a-upload
@@ -68,20 +71,21 @@
           >
             <a-button > <a-icon type="upload" /> {{ creFrom.pdf ? '已上传' : '上传文件' }} </a-button>
           </a-upload>
+          <p class="sx-notes">为保证正确显示缩略图, 建议也上传PDF</p>
         </a-form-item>
-        <a-form-item label="方案名称" :labelCol="labelCol" :wrapperCol="wrapperCol" >
-          <a-input placeholder="30字以内，简单清晰地表述" :maxLength="30" v-decorator="['title', {initialValue: creFrom.title, rules: [{required: true, message: '30字以内，简单清晰地表述'}]}]"></a-input>
+        <a-form-item label="标题名称" :labelCol="labelCol" :wrapperCol="wrapperCol" >
+          <a-input placeholder="30字以内，简单清晰地表述文档内容" :maxLength="30" v-decorator="['title', {initialValue: creFrom.title, rules: [{required: true, message: '请输入'}]}]"></a-input>
         </a-form-item>
-        <a-form-item label="方案分类" :labelCol="labelCol" :wrapperCol="wrapperCol" style="margin-bottom: 8px;">
-          <a-radio-group v-decorator="['type', {initialValue: creFrom.type, rules: [{required: true, message: '请选择方案类型！'}]}]">
-            <a-radio :value="item.type" v-for="item in radioList" :key="item.type">{{ item.title }}</a-radio>
+        <a-form-item label="所属板块" :labelCol="labelCol" :wrapperCol="wrapperCol" style="margin-bottom: 8px;">
+          <a-radio-group v-decorator="['type', {initialValue: creFrom.type, rules: [{required: true, message: '请选择！'}]}]">
+            <a-radio :value="item.type" v-for="item in typelist" :key="item.type" v-if="item.title!=='全部'">{{ item.title }}</a-radio>
           </a-radio-group>
         </a-form-item>
-        <a-form-item label="" :labelCol="{xs: { span: 2 },sm: { span: 2 }}" :wrapperCol="{xs: { span: 24, offset: 3 },sm: { span: 19, offset: 4 }}">
+        <a-form-item label="" :labelCol="{xs: { span: 2 },sm: { span: 2 }}" :wrapperCol="{xs: { span: 24, offset: 3 },sm: { span: 19, offset: 3 }}">
           <radio-list :radioList="es" :tagId="re" @radio="getRadio"></radio-list>
         </a-form-item>
-        <a-form-item label="讲述建议" :labelCol="labelCol" :wrapperCol="wrapperCol" >
-          <a-input style="height:80px;" placeholder="讲述建议将会在评论区里展示" type="textarea" v-decorator="['describe', {initialValue: creFrom.describe}]" />
+        <a-form-item label="信息备注" :labelCol="labelCol" :wrapperCol="wrapperCol" >
+          <a-input style="height:80px;" placeholder="其他可以用来描述文档的关键词, 例如: 品牌、艺人、项目名, 请使用逗号隔开, 系统会抓取用于搜索。" type="textarea" v-decorator="['describe', {initialValue: creFrom.describe}]" />
         </a-form-item>
       </a-form>
     </a-spin>
@@ -89,6 +93,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import { Tree } from 'ant-design-vue'
 import { tagList } from '@/api/index'
 import RadioList from './Radio'
@@ -117,11 +122,11 @@ export default {
     return {
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 7 }
+        sm: { span: 6 }
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 13 }
+        sm: { span: 15 }
       },
       visible: false,
       confirmLoading: false,
@@ -135,7 +140,6 @@ export default {
       form: this.$form.createForm(this),
       isEdit: false,
       treeData: [],
-      radioList: this.$store.getters.typelist,
       checkedKeys: [], // 默认选中的值
       replaceFields: {
         children: 'child',
@@ -150,6 +154,11 @@ export default {
     checkedKeys (val) {
       // console.log('onCheck', val)
     }
+  },
+  computed: {
+    ...mapState({
+      typelist: state => state.list.typelist
+    })
   },
   mounted () {
     this.getTag()
@@ -166,15 +175,6 @@ export default {
       for (let index = 0; index < item.length; index++) {
         const element = item[index]
         if (element.child) { // disableCheckbox为true, 以及有child 说明是 单独的一个数组
-          // if (this.isEdit) {
-          //   var idArray = []
-          //   for (let index = 0; index < element.child.length; index++) {
-          //     if (element.child[index].id) idArray.push(element.child[index].id)
-          //   }
-          //   const value = idArray.filter(v => this.creFrom.tag_id.includes(v))
-          //   if (value.length === 0) this.re[index] = undefined
-          //   this.re[index] = value
-          // }
           var idArray = []
           for (let i = 0; i < element.child.length; i++) {
             const tag = element.child[i].id
@@ -247,13 +247,12 @@ export default {
       const type = file.name.split('.').pop()
       const isJpgOrPng = type === 'ppt' || type === 'pptx' || type === 'pdf'
       if (!isJpgOrPng) return this.$message.error('请上传pdf或者ppt文件!')
-      const isLt2M = file.size / 1024 / 1024 < 100
-      if (!isLt2M) return this.$message.error('文件上限 100MB!')
+      const isLt2M = file.size / 1024 / 1024 < 200
+      if (!isLt2M) return this.$message.error('文件上限 200MB!')
       if (type === 'ppt' || type === 'pptx') this.$nextTick(() => { this.form.setFieldsValue({ title: file.name.split('.')[0] }) })
       return false
     },
     handleChange (info, type) {
-      console.log(info, type)
       this.creFrom[type] = info.file
       var formData = new FormData()
       formData.append('file', info.file)
@@ -306,5 +305,11 @@ export default {
 .simg {
   width: 240px;
   height: 135px;
+}
+.sx-notes {
+  font-size: 14px;
+  color: #ccc;
+  line-height: 19px;
+  margin-bottom: 0;
 }
 </style>

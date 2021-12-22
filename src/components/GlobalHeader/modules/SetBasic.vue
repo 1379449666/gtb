@@ -144,9 +144,9 @@ export default {
       if (!isJpgOrPng) {
         return this.$message.error('请上传图片!')
       }
-      const isLt2M = file.size / 1024 / 1024 < 100
+      const isLt2M = file.size / 1024 / 1024 < 200
       if (!isLt2M) {
-        this.$message.error('文件上限 100MB!')
+        this.$message.error('文件上限 200MB!')
         return
       }
       return false
