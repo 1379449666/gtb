@@ -26,9 +26,9 @@ export default {
   mounted () {
   },
   computed: {
-   userStat () {
-    return this.$store.getters.userStat
-   }
+    userStat () {
+      return this.$store.getters.userStat || {}
+    }
   },
   watch: {
     userStat: {
@@ -43,7 +43,6 @@ export default {
     //   this.infoArray = [info.upload, info.download, info.like]
     // }
     jump (index) {
-      console.log(index)
       if (index === 0) this.$router.push({ name: 'ranking' })
     }
   }

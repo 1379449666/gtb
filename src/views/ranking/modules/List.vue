@@ -1,7 +1,7 @@
 <!--
  * @Author: bert
  * @Date: 2022-01-17 19:48:10
- * @LastEditTime: 2022-01-18 09:54:55
+ * @LastEditTime: 2022-01-18 10:13:59
  * @LastEditors: bert
  * @Description: 排行榜列表
  * @FilePath: /guTengBao/src/views/ranking/modules/List.vue
@@ -79,6 +79,7 @@ h5 {
     // flex: 1;
     text-align: center;
     margin-bottom: 6px;
+    font-size: 18px;
     i {
       font-style: normal;
       display: inline-block;
@@ -89,13 +90,13 @@ h5 {
     }
   }
   >span:nth-child(1) {
-    width: 30px;
+    width: 36px;
   }
   >span:nth-child(2) {
     flex: 2;
   }
   >span:nth-child(3) {
-    width: 71px;
+    width: 90px;
   }
 }
 .greater {
@@ -108,5 +109,8 @@ h5 {
     background-color: #b28d58;
     color: #fff;
   }
+}
+.greater:last-child {
+  margin-bottom: 10px;
 }
 </style>
