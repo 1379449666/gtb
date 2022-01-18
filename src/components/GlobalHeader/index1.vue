@@ -1,7 +1,7 @@
 <!--
  * @Author: wangChao
  * @Date: 2021-06-05 10:56:35
- * @LastEditTime: 2021-12-22 19:42:57
+ * @LastEditTime: 2022-01-17 18:31:14
  * @LastEditors: bert
  * @Description: 公共头部
  * @FilePath: /guTengBao/src/components/GlobalHeader/index1.vue
@@ -17,9 +17,7 @@
           <span>AMS策划方案 - 模块化交付</span>
         </div>
       </div>
-      <div class="gtb_label_type">
-        <span v-for="(item, index) in typelist" :key="index" :class="buttonIndex == index ? 'button-select' : ''" @click="editButtonIndex(index, item)">{{ item.title }}</span>
-      </div>
+      <div style="width: 38%;"></div>
       <statistics />
       <div class="gtb_personal_data gtb_flex">
         <div class="gtb_flex gtb_justify-center gtb_direction-column">
@@ -47,6 +45,9 @@
     </header>
     <org-modal ref="modal" @add="onAdd"></org-modal>
     <set-basic ref="basic" ></set-basic>
+    <div class="gtb_label_type">
+      <span v-for="(item, index) in typelist" :key="index" :class="buttonIndex == index ? 'button-select' : ''" @click="editButtonIndex(index, item)">{{ item.title }}</span>
+    </div>
   </div>
 </template>
 
@@ -199,32 +200,7 @@ header {
       }
     }
   }
-  .gtb_label_type {
-    margin-right: 4%;
-    width: 40%;
-    display: flex;
-    overflow: auto;
-    span {
-      flex: none;
-      display: inline-block;
-      width: 80px;
-      height: 36px;
-      text-align: center;
-      color: #2C2C2C;
-      background-color: #F4F4F4;
-      font: normal normal bold 17px/36px Microsoft YaHei;
-      border-radius: 4px;
-      margin-right: 30px;
-      cursor: pointer;
-    }
-    .button-select {
-      color: #fff;
-      background-color: #283452;
-    }
-    span:last-child {
-      margin-right: 0;
-    }
-  }
+
   .gtb_personal_data {
     margin-left: 10px;
     cursor: pointer;
@@ -256,6 +232,34 @@ header {
     p {
       margin-bottom: 0;
     }
+  }
+}
+.gtb_label_type {
+  background-color: #fff;
+  // margin-right: 4%;
+  // width: 40%;
+  padding: 0 10.41% 20px;
+  display: flex;
+  overflow: auto;
+  span {
+    flex: none;
+    display: inline-block;
+    width: 80px;
+    height: 36px;
+    text-align: center;
+    color: #2C2C2C;
+    background-color: #F4F4F4;
+    font: normal normal bold 17px/36px Microsoft YaHei;
+    border-radius: 4px;
+    margin-right: 30px;
+    cursor: pointer;
+  }
+  .button-select {
+    color: #fff;
+    background-color: #283452;
+  }
+  span:last-child {
+    margin-right: 0;
   }
 }
 </style>

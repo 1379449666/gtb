@@ -26,6 +26,12 @@ export const asyncRouterMap = [
         name: 'details',
         component: () => import('@/views/list/details1.vue'),
         meta: { title: '古腾堡', icon: 'profile', permission: ['profile'] }
+      },
+      {
+        path: '/ranking',
+        name: 'ranking',
+        component: () => import('@/views/ranking/index'),
+        meta: { title: '排行榜', icon: 'profile', permission: ['profile'] }
       }
       // dashboard
       // {

@@ -1,8 +1,8 @@
 /*
  * @Author: wangChao
  * @Date: 2021-06-09 16:42:16
- * @LastEditTime: 2021-06-22 13:42:56
- * @LastEditors: wangChao
+ * @LastEditTime: 2022-01-17 19:40:24
+ * @LastEditors: bert
  * @Description: 主页
  * @FilePath: /guTengBao/src/api/index.js
  * 我家门前有两棵树，一棵是枣树，另一棵也是枣树。
@@ -26,7 +26,8 @@ const indexApi = {
   addStat: '/project/addStat', // 统计设置
   commentList: '/comment/list', // 获取评论列表
   commentAdd: '/comment/add', // 新增评论
-  tagList: '/tag/list' // 标签列表
+  tagList: '/tag/list', // 标签列表
+  rank: '/project/rank' // 排行榜
 }
 
 /**
@@ -52,3 +53,4 @@ const indexApi = {
  export function commentList (parameter) { return request({ url: indexApi.commentList, method: 'post', data: parameter }) }
  export function commentAdd (parameter) { return request({ url: indexApi.commentAdd, method: 'post', data: parameter }) }
  export function tagList (parameter) { return request({ url: indexApi.tagList, method: 'post', data: parameter }) }
+ export function rank (parameter) { return request({ url: indexApi.rank, method: 'post', data: parameter }) }
