@@ -1,7 +1,7 @@
 <!--
  * @Author: bert
  * @Date: 2022-01-17 19:48:10
- * @LastEditTime: 2022-01-18 10:13:59
+ * @LastEditTime: 2022-01-20 18:18:24
  * @LastEditors: bert
  * @Description: 排行榜列表
  * @FilePath: /guTengBao/src/views/ranking/modules/List.vue
@@ -14,7 +14,7 @@
       <div class="flex">
         <span>排名</span>
         <span>用户名</span>
-        <span>被{{ title }}总量</span>
+        <span> {{ remarks }} </span>
       </div>
 
       <div :class="['flex', item.rank > 3 ? 'greater' : 'three']" v-for="item in rankingData" :key="item.rank">
@@ -37,6 +37,10 @@ export default {
 
   props: {
     title: {
+      type: String,
+      default: ''
+    },
+    remarks: {
       type: String,
       default: ''
     },
